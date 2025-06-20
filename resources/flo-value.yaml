@@ -1,0 +1,28 @@
+global:
+  imagePullSecrets:
+    - name: far-secret
+  certmgr:
+    clusterIssuer: bnk-ca-cluster-issuer
+ 
+image:
+  repository: repo.f5.com/images
+  name: f5-lifecycle-operator
+  pullPolicy: Always
+
+namespace: "default"
+
+fluentbit_sidecar:
+  enabled: true
+  image:
+    name: f5-fluentbit
+ 
+f5-ipam-operator:
+  image:
+    repository: repo.f5.com/images
+    pullPolicy: IfNotPresent
+  namespace: "default"
+  nameOverride: "f5-ipam-operator"
+  fullnameOverride: "f5-ipam-operator"
+ 
+license:
+  jwt: $JWT

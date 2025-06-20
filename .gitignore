@@ -1,0 +1,8 @@
+bfb_config_*.conf
+bf-bundle-*.bfb
+.jwt
+far
+*.pcap
+*.tgz
+credentials
+.env
