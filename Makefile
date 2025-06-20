@@ -8,7 +8,7 @@ print:
 	set -a; source ./.env; echo $$DPU_NODES
 
 cluster:
-	set -a; source ./.env; $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/$$CLUSTER/,dst=/inventory,Z,U \
+	set -a; source ./.env; $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z,U \
   	--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa,Z" \
     quay.io/kubespray/kubespray:v2.28.0 \
 		ansible-playbook -i /inventory/inventory.ini --private-key /root/.ssh/id_rsa cluster.yml \
@@ -71,7 +71,7 @@ bnk-gateway-class:
 	./scripts/deploy-bnkgwc.sh
 
 clean-all:
-	set -a; source ./.env ; $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/$$CLUSTER/,dst=/inventory,Z,U \
+	set -a; source ./.env ; $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z,U \
   	--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa,Z" \
     quay.io/kubespray/kubespray:v2.28.0 \
 		ansible-playbook -i /inventory/inventory.ini --private-key /root/.ssh/id_rsa reset.yml \
