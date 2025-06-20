@@ -1,4 +1,7 @@
-# f5nk-kubespray
+# f5bnk-kubespray
+
+Deploy F5 BNK https://clouddocs.f5.com/bigip-next-for-kubernetes/2.0.0-GA/ on baremetal node
+with Nvidia Bluefield-3 using kubespray.
 
 ## Requirements
 
