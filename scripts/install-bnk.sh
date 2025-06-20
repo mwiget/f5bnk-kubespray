@@ -72,7 +72,11 @@ helm upgrade --install csi-driver-nfs csi-driver-nfs/csi-driver-nfs --namespace 
 
 echo "waiting for pods be ready in kube-system namespace ..."
 sleep 2
-kubectl wait --for=condition=Ready pods --all -n kube-system
+until kubectl wait --for=condition=Ready pods --all -n kube-system; do
+  echo "retrying in 5 secs ..."
+  sleep 5
+done
+
 kubectl get pods --selector app.kubernetes.io/name=csi-driver-nfs --namespace kube-system
 kubectl apply -f resources/storageclass.yaml
 kubectl patch storageclass nfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'

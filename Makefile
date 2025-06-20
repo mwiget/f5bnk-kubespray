@@ -28,6 +28,7 @@ untaint-control-plane:
 	set -a; source ./.env; kubectl taint node $$CLUSTER node-role.kubernetes.io/control-plane:NoSchedule-
 
 sriov:
+	kubectl apply -f resources/multus.yaml
 	kubectl apply -f resources/cni-plugins.yaml
 	kubectl apply -f resources/sriovdp-config.yaml
 	kubectl apply -f resources/sriov-cni-daemonset.yaml
@@ -69,6 +70,11 @@ bnk:
 
 bnk-gateway-class:
 	./scripts/deploy-bnkgwc.sh
+
+bfb-install:
+	set -a; source ./.env; for node in $$DPU_HOST_NODES; do \
+		rsync -avuz dpu $$node:; \
+		ssh $$node "cd dpu && ./deploy-bf-bundle.sh"; done
 
 clean-all:
 	set -a; source ./.env ; $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z,U \

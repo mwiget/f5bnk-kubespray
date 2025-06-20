@@ -43,7 +43,10 @@ echo "f5-tmm DaemonSet is ready."
 
 echo ""
 echo "Installing vlan (selfIP) ..."
-kubectl apply -f resources/vlans.yaml
+until kubectl apply -f resources/vlans.yaml; do
+  echo "retrying in 5 secs ..."
+  sleep 5
+done
 
 echo ""
 echo "Install zebos bgp config  ..."

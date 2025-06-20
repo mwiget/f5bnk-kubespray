@@ -6,3 +6,4 @@ far
 *.tgz
 credentials
 .env
+*.conf
