@@ -5,20 +5,17 @@ SECONDS=0
 
 set -a; source .env
 
-echo "check cluster node $CLUSTER ..."
-kubectl get node $CLUSTER -o wide
+echo "check cluster node ..."
+kubectl get node -o wide
 
-echo $NODE_PRIMARY_IFADDR
+echo $INTERNAL_NETWORK
 
-echo ""
-echo "label and annotate nodes $DPU_HOST_NODES and $DPU_NODES to deploy TMM via operator"
-echo "set k8s.ovn.org/node-primary-ifaddr={"ipv4":"$NODE_PRIMARY_IFADDR"}"
-
-for node in $DPU_HOST_NODES; do
-  kubectl annotate --overwrite node $CLUSTER "k8s.ovn.org/node-primary-ifaddr={\"ipv4\":\"$NODE_PRIMARY_IFADDR\"}"
-done
-for node in $DPU_NODES; do
-  kubectl label node $node app=f5-tmm || true
+for node in $(kubectl get nodes -o name | grep -v dpu | cut -d/ -f2); do
+  ip=$(kubectl get node "$node" -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
+  echo -n "$node ($ip) -> k8s.ovn.org/node-primary-ifaddr="
+  node_primary_ifaddr=$(ssh $ip "ip route get $INTERNAL_NETWORK 2>/dev/null | grep dev | awk '{print \$5}'")
+  echo "$node_primary_ifaddr"
+  kubectl annotate --overwrite node $node "k8s.ovn.org/node-primary-ifaddr={\"ipv4\":\"$node_primary_ifaddr\"}"
 done
 
 echo ""

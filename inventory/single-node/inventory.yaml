@@ -1,0 +1,43 @@
+all:
+  vars:
+    schedule_on_control_plane: true
+    kube_network_plugin: calico
+    kube_network_plugin_multus: true
+
+  hosts:
+    rome1:
+      ansible_host: 192.168.68.62
+      ansible_user: mwiget
+      ansible_become: true
+      ip: 192.168.68.62
+      access_ip: 192.168.68.62
+
+    rome1-dpu:
+      ansible_host: 192.168.68.79
+      ansible_user: ubuntu
+      ansible_become: true
+      ip: 192.168.68.79
+      access_ip: 192.168.68.79
+      node_labels:
+        "app": "f5-tmm"
+      node_taints:
+        - "dpu=true:NoSchedule"
+
+  children:
+    kube_control_plane:
+      hosts:
+        rome1:
+
+    kube_node:
+      hosts:
+        rome1:
+        rome1-dpu:
+
+    etcd:
+      hosts:
+        rome1:
+
+    k8s_cluster:
+      children:
+        kube_control_plane:
+        kube_node:

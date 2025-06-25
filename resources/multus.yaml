@@ -180,6 +180,10 @@ spec:
         effect: NoSchedule
       - operator: Exists
         effect: NoExecute
+      - key: "dpu"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
       serviceAccountName: multus
       containers:
       - name: kube-multus
