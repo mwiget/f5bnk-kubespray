@@ -29,9 +29,6 @@ all:
       ansible_become: true
       ip: 192.168.68.73
       access_ip: 192.168.68.73
-      kubelet_cpu_manager_policy: static
-      kubelet_topology_manager_policy: single-numa-node
-      kubelet_reservedSystemCPUs: "0-7"
 
     milan1-dpu:
       ansible_host: 192.168.68.96
