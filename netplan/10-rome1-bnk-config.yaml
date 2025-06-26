@@ -1,0 +1,47 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+
+    enp193s0f0np0:
+      virtual-function-count: 4
+    enp193s0f1np1:
+      virtual-function-count: 4
+
+    enp193s0f1v0:
+      link: enp193s0f1np1
+      dhcp4: no
+      dhcp6: no
+    enp193s0f1v1:
+      link: enp193s0f1np1
+      dhcp4: no
+      dhcp6: no
+
+
+  vlans:
+    internal:
+      id: 200
+      link: enp193s0f1v0
+      addresses:
+        - 198.18.100.62/24
+        - 2001::198:18:100:62/64
+    storage:
+      id: 205
+      link: enp193s0f1v1
+      addresses:
+        - 198.18.200.62/24
+        - 2001::198:18:200:62/64
+
+#  bonds:
+#    internal:
+#      interfaces:
+#        - enp193s0f0v1
+#        - enp193s0f1v1
+#      parameters:
+#        mode: 802.3ad
+#        lacp-rate: fast
+#        transmit-hash-policy: layer3+4
+#        mii-monitor-interval: 100
+#      dhcp4: no
+#      addresses:
+#        - 198.18.100.62/24
