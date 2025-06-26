@@ -52,6 +52,7 @@ nvidia-gpu-operator:
 
 bnk:
 	./scripts/check-requirements.sh
+	./scripts/decode-jwt.sh ~/.jwt
 	./scripts/install-bnk.sh
 
 bnk-gateway-class:
