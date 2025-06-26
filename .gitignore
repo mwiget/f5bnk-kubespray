@@ -7,3 +7,4 @@ far
 credentials
 .env
 *.conf
+tmp
