@@ -15,7 +15,7 @@ spec:
   selfip_v6s:
     - 2001::192:0:2:201
     - 2001::192:0:2:202
-  prefixlen_v6: 112
+  prefixlen_v6: 64
   auto_lasthop: "AUTO_LASTHOP_ENABLED"
 ---
 apiVersion: "k8s.f5net.com/v1"
@@ -34,5 +34,24 @@ spec:
   selfip_v6s:
     - 2001::198:18:100:201
     - 2001::198:18:100:202
-  prefixlen_v6: 112
+  prefixlen_v6: 64
+  auto_lasthop: "AUTO_LASTHOP_ENABLED"
+---
+apiVersion: "k8s.f5net.com/v1"
+kind: F5SPKVlan
+metadata:
+  name: storage
+spec:
+  name: storage
+  tag: 205
+  interfaces:
+    - "1.2"
+  selfip_v4s:
+    - 198.18.200.201
+    - 198.18.200.202
+  prefixlen_v4: 24
+  selfip_v6s:
+    - 2001::198:18:200:201
+    - 2001::198:18:200:202
+  prefixlen_v6: 64
   auto_lasthop: "AUTO_LASTHOP_ENABLED"

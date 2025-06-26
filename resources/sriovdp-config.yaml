@@ -8,19 +8,31 @@ data:
     {
         "resourceList": [
             {
-              "resourceName": "bf3_p0_sf",
+              "resourceName": "bf3_p0_sf0",
               "resourcePrefix": "nvidia.com",
               "deviceType": "auxNetDevice",
               "selectors": [{
                 "vendors": ["15b3"],
                 "devices": ["a2dc"],
                 "pciAddresses": ["0000:03:00.0"],
-                "pfNames": ["p0#1"],
+                "pfNames": ["p0#0"],
                 "auxTypes": ["sf"]
               }]
             },
             {
-              "resourceName": "bf3_p1_sf",
+              "resourceName": "bf3_p1_sf0",
+              "resourcePrefix": "nvidia.com",
+              "deviceType": "auxNetDevice",
+              "selectors": [{
+                "vendors": ["15b3"],
+                "devices": ["a2dc"],
+                "pciAddresses": ["0000:03:00.1"],
+                "pfNames": ["p1#0"],
+                "auxTypes": ["sf"]
+                }]
+            },
+            {
+              "resourceName": "bf3_p1_sf1",
               "resourcePrefix": "nvidia.com",
               "deviceType": "auxNetDevice",
               "selectors": [{
