@@ -95,10 +95,6 @@ write_files:
     content: |
       #!/bin/bash
       systemctl stop containerd kubelet kubepods.slice
-      apt remove containerd -y
-      rm -rf /usr/lib/systemd/system/containerd*
-      rm -rf /etc/containerd
-      rm -f /etc/systemd/system/containerd.service
       rm -rf /var/lib/containerd/*
       rm -rf /run/containerd/*
       rm -f /usr/lib/systemd/system/kubelet.service.d/90-kubelet-bluefield.conf

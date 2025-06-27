@@ -1,8 +1,7 @@
 #
 #
 
-
-all: cluster kubeconfig sriov cert-manager grafana \
+all: cluster kubeconfig single-node-fix-coredns sriov cert-manager grafana \
 	nvidia-gpu-operator bnk bnk-gateway-class
 
 cluster:
@@ -15,6 +14,9 @@ cluster:
 
 kubeconfig:
 	./scripts/get-kubeconfig.sh
+
+single-node-fix-coredns:
+	./scripts/coredns-single-node.sh
 
 sriov:
 	kubectl apply -f resources/multus.yaml
