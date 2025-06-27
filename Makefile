@@ -49,7 +49,7 @@ grafana:
 nvidia-gpu-operator:
 	helm repo add nvidia https://nvidia.github.io/gpu-operator
 	helm repo update
-	helm install --namespace gpu-operator --create-namespace \
+	helm upgrade --install --namespace gpu-operator --create-namespace \
 		gpu-operator nvidia/gpu-operator
 
 bnk:
