@@ -1,0 +1,26 @@
+scaling nginx-deployment to 10 replicas ...
+deployment.apps/nginx-deployment scaled
+Success: 10 replicas are configured and ready.
+
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   10/10   10           10          5h55m
+
+single request ...
+
+Time: 0.155152s
+Speed: 3379189 bytes/s
+
+Sending 100 for 30s ...
+Running 30s test @ http://198.19.19.50/test/512kb
+  10 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.80ms   52.62ms 663.45ms   88.04%
+    Req/Sec     1.92k   386.87     3.22k    67.11%
+  Latency Distribution
+     50%    3.75ms
+     75%   10.46ms
+     90%  101.32ms
+     99%  211.31ms
+  575151 requests in 30.10s, 281.00GB read
+Requests/sec:  19108.02
+Transfer/sec:      9.34GB

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: blue
+  labels:
+    app: nginx-tcp
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: nginx-tcp
+  template:
+    metadata:
+      labels:
+        app: nginx-tcp
+    spec:
+      volumes:
+      - name: testfile-dir
+        emptyDir: {}
+      initContainers:
+      - name: create-test-file
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args:
+          - mkdir -p /testdir && dd if=/dev/urandom of=/testdir/512kb bs=512K count=1
+        volumeMounts:
+        - name: testfile-dir
+          mountPath: /testdir
+      containers:
+      - name: nginx-tcp
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: testfile-dir
+          mountPath: /usr/share/nginx/html/test

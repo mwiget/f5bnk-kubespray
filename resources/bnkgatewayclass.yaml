@@ -25,7 +25,7 @@ spec:
   networkAttachments:
   - sf-external
   - sf-internal
-  - sf-storage
+  #- sf-storage
      
   # Features
   # CSRC Egress

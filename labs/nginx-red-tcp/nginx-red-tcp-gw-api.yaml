@@ -1,0 +1,61 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: f5-gateway-class
+spec:
+  controllerName: "f5.com/default-f5-cne-controller"
+  description: "F5 BIG-IP Kubernetes Gateway"
+---
+apiVersion: k8s.f5net.com/v1
+kind: F5BnkGateway
+metadata:
+  name: f5-bnkgateway
+  namespace: default
+spec:
+  ingressConfig:
+    defaultListenerNetworks:
+      - name: "default_ipv4"
+        ipv4BaseCidr: "198.19.19.0/24"
+        startAddress: "198.19.19.50"
+        endAddress: "198.19.19.59"
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: f5-l4-gateway
+  namespace: red
+spec:
+  infrastructure:
+    parametersRef:
+      group: k8s.f5net.com
+      kind: F5BnkGateway
+      name: f5-bnkgateway
+  gatewayClassName: f5-gateway-class
+  listeners:
+    - name: l4-nginx-tcp
+      protocol: TCP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+        kinds:
+          - kind: L4Route
+            group: gateway.k8s.f5net.com
+---
+apiVersion: gateway.k8s.f5net.com/v1
+kind: L4Route
+metadata:
+  name: l4-tcp-nginx-app
+  namespace: red
+spec:
+  protocol: TCP
+  pvaAccelerationMode: full/assisted
+  parentRefs:
+  - name: f5-l4-gateway
+    sectionName: l4-nginx-tcp
+    namespace: red
+  rules:
+  - backendRefs:
+    - name: nginx-app-svc
+      port: 80
+      namespace: red

@@ -1,0 +1,48 @@
+
+/home/mwiget/f5bnk-k3s-gpu/labs/nginx-red-http
+
+Test reachability to virtual server 198.19.19.100 from lake1 ...
+PING 198.19.19.100 (198.19.19.100) 56(84) bytes of data.
+64 bytes from 198.19.19.100: icmp_seq=1 ttl=255 time=16.5 ms
+64 bytes from 198.19.19.100: icmp_seq=2 ttl=255 time=0.674 ms
+64 bytes from 198.19.19.100: icmp_seq=3 ttl=255 time=1.62 ms
+
+--- 198.19.19.100 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2058ms
+rtt min/avg/max/mdev = 0.674/6.261/16.491/7.243 ms
+
+NAME            READY   MESSAGE                                AGE
+f5-bnkgateway   True    CR config sent to all grpc endpoints   107m
+NAME               CONTROLLER                         ACCEPTED   AGE
+f5-gateway-class   f5.com/default-f5-cne-controller   True       114m
+NAME                   CLASS              ADDRESS         PROGRAMMED   AGE
+my-httproute-gateway   f5-gateway-class   198.19.19.100   True         155m
+NAME       HOSTNAMES              AGE
+http-app   ["http.example.com"]   154m
+
+
+Test with curl from client lake1 using invalid host ...
+
+HTTP/1.1 200 OK
+Server: nginx/1.27.5
+Date: Mon, 19 May 2025 12:26:28 GMT
+Content-Type: text/html
+Content-Length: 615
+Last-Modified: Wed, 16 Apr 2025 12:01:11 GMT
+Connection: keep-alive
+ETag: "67ff9c07-267"
+Accept-Ranges: bytes
+
+
+Test with curl from client lake1 ...
+
+HTTP/1.1 200 OK
+Server: nginx/1.27.5
+Date: Mon, 19 May 2025 12:26:29 GMT
+Content-Type: text/html
+Content-Length: 615
+Last-Modified: Wed, 16 Apr 2025 12:01:11 GMT
+Connection: keep-alive
+ETag: "67ff9c07-267"
+Accept-Ranges: bytes
+

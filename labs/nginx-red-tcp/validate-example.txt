@@ -1,0 +1,44 @@
+
+NAME            READY   MESSAGE                                AGE
+f5-bnkgateway   True    CR config sent to all grpc endpoints   147m
+NAME               CONTROLLER                         ACCEPTED   AGE
+f5-gateway-class   f5.com/default-f5-cne-controller   True       147m
+NAME            CLASS              ADDRESS        PROGRAMMED   AGE
+f5-l4-gateway   f5-gateway-class   198.19.19.50   True         147m
+NAME               AGE
+l4-tcp-nginx-app   147m
+NAME            TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+nginx-app-svc   ClusterIP   10.43.185.4   <none>        80/TCP    112m
+
+
+extract assigned IP address from f5-l4-gateway ... 198.19.19.50
+
+/home/mwiget/f5bnk-k3s-gpu/labs/nginx-red-tcp
+
+Test reachability to virtual server 198.19.19.50 from lake1 ...
+PING 198.19.19.50 (198.19.19.50) 56(84) bytes of data.
+64 bytes from 198.19.19.50: icmp_seq=1 ttl=255 time=0.494 ms
+64 bytes from 198.19.19.50: icmp_seq=2 ttl=255 time=0.508 ms
+64 bytes from 198.19.19.50: icmp_seq=3 ttl=255 time=1.56 ms
+
+--- 198.19.19.50 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2083ms
+rtt min/avg/max/mdev = 0.494/0.854/1.561/0.499 ms
+
+Test with curl from client lake1 ...
+
+HTTP/1.1 200 OK
+Server: nginx/1.27.5
+Date: Tue, 20 May 2025 17:17:27 GMT
+Content-Type: text/html
+Content-Length: 615
+Last-Modified: Wed, 16 Apr 2025 12:01:11 GMT
+Connection: keep-alive
+ETag: "67ff9c07-267"
+Accept-Ranges: bytes
+
+
+Downloading 512kb payload from 198.19.19.50 ...
+
+Time: 0.012094s
+Speed: 43351083 bytes/s
