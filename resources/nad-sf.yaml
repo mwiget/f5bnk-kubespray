@@ -19,7 +19,7 @@ kind: NetworkAttachmentDefinition
 metadata:
   name: sf-internal
   annotations:
-   k8s.v1.cni.cncf.io/resourceName: nvidia.com/bf3_p1_sf0
+   k8s.v1.cni.cncf.io/resourceName: nvidia.com/bf3_p0_sf1
 spec:
   config: '{
     "type": "sf",
@@ -35,7 +35,7 @@ kind: NetworkAttachmentDefinition
 metadata:
   name: sf-storage
   annotations:
-   k8s.v1.cni.cncf.io/resourceName: nvidia.com/bf3_p1_sf1
+   k8s.v1.cni.cncf.io/resourceName: nvidia.com/bf3_p0_sf2
 spec:
   config: '{
     "type": "sf",
