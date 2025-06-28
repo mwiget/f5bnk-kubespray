@@ -1,6 +1,6 @@
 # UPDATE_DPU_OS - Update/Install BlueField Operating System (Default: yes)
 UPDATE_DPU_OS="yes"
-# ubuntu_PASSWORD='$1$..................'
+# ubuntu_PASSWORD='$1$....................../'
 
 ###############################################################################
 # Other misc configuration
@@ -90,6 +90,10 @@ OVS_TIMEOUT=300
 OVS_BR_PORTS_TIMEOUT=30
 EOFSF
 
+    cat <<EOFBF >> /mnt/etc/mellanox/mlnx-bf.conf
+LAG_HASH_MODE="yes"
+EOFBF
+
     # Cloud-init for upgrading containerd and runc
     cat << EOFCLOUDINIT >> /mnt/var/lib/cloud/seed/nocloud-net/user-data
 write_files:
@@ -136,8 +140,10 @@ write_files:
       rm -rf /var/lib/containerd/*
       rm -rf /run/containerd/*
       rm -f /usr/lib/systemd/system/kubelet.service.d/90-kubelet-bluefield.conf
-      systemctl enable --now bond0
       systemctl daemon-reload
+      mlxconfig -d /dev/mst/mt41692_pciconf0 -y s LAG_RESOURCE_ALLOCATION=1
+      systemctl enable --now bond0
+
 runcmd:
   - [ /var/tmp/setup-script.sh ]
 EOFCLOUDINIT
