@@ -1,6 +1,6 @@
 # UPDATE_DPU_OS - Update/Install BlueField Operating System (Default: yes)
 UPDATE_DPU_OS="yes"
-# ubuntu_PASSWORD='$1$......................'
+ubuntu_PASSWORD='$1$BOMjxc.B$MhfAgHhiP6jd21QdjNXgD/'
 
 ###############################################################################
 # Other misc configuration
@@ -35,6 +35,8 @@ ethernets:
   oob_net0:
     dhcp4: true
     dhcp6: true
+bonds:
+  bond0: {}
 EOFNET
 
     # Modules for kubernetes and DPDK
@@ -42,6 +44,7 @@ EOFNET
 overlay
 br_netfilter
 vfio_pci
+bonding
 EOFMODULES
 
     # sysctl settings for kubernets
@@ -78,10 +81,10 @@ EOFSF
 
     cat <<EOFSF > /mnt/etc/mellanox/mlnx-ovs.conf
 CREATE_OVS_BRIDGES="yes"
-OVS_BRIDGE1="sf_external"
-OVS_BRIDGE1_PORTS="p0 pf0hpf en3f0pf0sf0 en3f0pf0sf1 en3f0pf0sf2 pf0vf0 pf0vf1 pf0vf2 pf0vf3"
-OVS_BRIDGE2="sf_internal"
-OVS_BRIDGE2_PORTS="p1 pf1hpf en3f1pf1sf0 en3f1pf1sf1 en3f1pf1sf2 pf1vf0 pf1vf1 pf1vf2 pf1vf3"
+OVS_BRIDGE1="br-lag"
+OVS_BRIDGE1_PORTS="bond0 pf0hpf en3f0pf0sf0 en3f0pf0sf1 en3f0pf0sf2 en3f1pf1sf0 en3f1pf1sf1 en3f1pf1sf2 pf0vf0 pf0vf1 pf0vf2 pf0vf3"
+OVS_BRIDGE2=""
+OVS_BRIDGE2_PORTS="dummy" # prevents bridge2 from being created
 OVS_HW_OFFLOAD="yes"
 OVS_TIMEOUT=300
 OVS_BR_PORTS_TIMEOUT=30
@@ -90,6 +93,41 @@ EOFSF
     # Cloud-init for upgrading containerd and runc
     cat << EOFCLOUDINIT >> /mnt/var/lib/cloud/seed/nocloud-net/user-data
 write_files:
+  - path: /etc/systemd/system/bond0.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Bond Service
+      After=network.target
+
+      [Service]
+      Type=oneshot
+      ExecStart=/bin/bash /usr/sbin/create-bond0.sh
+      RemainAfterExit=no
+
+      [Install]
+      WantedBy=multi-user.target
+  - path: /usr/sbin/create-bond0.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      echo "stopping openibd ..."
+      systemctl stop openibd
+      echo "deleting bond0 ..."
+      ip link del bond0
+      echo "starting openibd ..."
+      systemctl start openibd
+      echo "creating bond0 ..."
+      ip link add bond0 type bond
+      ip link set bond0 down
+      ip link set bond0 type bond miimon 100 mode 4 xmit_hash_policy layer3+4 lacp_rate fast
+      ip link set p0 down
+      ip link set p1 down
+      ip link set p0 master bond0
+      ip link set p1 master bond0
+      ip link set p0 up
+      ip link set p1 up
+      ip link set bond0 up
   - path: /var/tmp/setup-script.sh
     permissions: '0755'
     content: |
@@ -98,6 +136,7 @@ write_files:
       rm -rf /var/lib/containerd/*
       rm -rf /run/containerd/*
       rm -f /usr/lib/systemd/system/kubelet.service.d/90-kubelet-bluefield.conf
+      systemctl enable --now bond0
       systemctl daemon-reload
 runcmd:
   - [ /var/tmp/setup-script.sh ]
