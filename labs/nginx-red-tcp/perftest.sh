@@ -8,7 +8,7 @@ VIP="198.19.19.50"
 NAMESPACE=red
 DEPLOYMENT=nginx-deployment
 
-client=lake1
+client=rome1
 
 set -e
 
