@@ -1,6 +1,6 @@
 # UPDATE_DPU_OS - Update/Install BlueField Operating System (Default: yes)
 UPDATE_DPU_OS="yes"
-ubuntu_PASSWORD='$1$BOMjxc.B$MhfAgHhiP6jd21QdjNXgD/'
+# ubuntu_PASSWORD='$1$..................'
 
 ###############################################################################
 # Other misc configuration
