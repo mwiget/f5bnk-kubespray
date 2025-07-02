@@ -26,18 +26,21 @@ network:
     external:
       id: 210
       link: enp193s0f0np0
+      mtu: 1496
       addresses:
         - 192.0.2.62/24
         - 2001::192:0:2:62/64
     internal:
       id: 200
       link: enp193s0f0np0
+      mtu: 1496
       addresses:
         - 198.18.100.62/24
         - 2001::198:18:100:62/64
     storage:
       id: 205
       link: enp193s0f0np0
+      mtu: 1496
       addresses:
         - 198.18.200.62/24
         - 2001::198:18:200:62/64

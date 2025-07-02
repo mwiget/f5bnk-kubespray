@@ -12,6 +12,9 @@ client=rome1
 
 set -e
 
+ssh $client sudo ip route add 198.19.19.0/24 via 192.0.2.202 || true
+
+
 echo "scaling $DEPLOYMENT to $REPLICAS replicas ..."
 kubectl scale deployment $DEPLOYMENT -n $NAMESPACE --replicas=$REPLICAS
 
@@ -34,7 +37,8 @@ kubectl get deployment -n $NAMESPACE $DEPLOYMENT
 echo ""
 
 echo "single request ..."
-ssh $client "curl -s -w \"\nTime: %{time_total}s\nSpeed: %{speed_download} bytes/s\n\" -o /dev/null http://$VIP/test/512kb"
+set -x
+ssh $client "echo curl -s -w \"\nTime: %{time_total}s\nSpeed: %{speed_download} bytes/s\n\" -o /dev/null http://$VIP/test/512kb"
 
 echo ""
 echo "Sending $CONCURRENT_REQUESTS for $DURATION ..."

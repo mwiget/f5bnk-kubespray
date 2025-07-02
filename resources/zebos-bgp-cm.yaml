@@ -12,18 +12,18 @@ data:
       no bgp default ipv4-unicast
       redistribute kernel
       !
-      neighbor 192.0.2.250 remote-as 65201
-      neighbor 2001::192:0:2:250 remote-as 65201
+      neighbor 192.0.2.1 remote-as 65201
+      neighbor 2001::192:0:2:1 remote-as 65201
       !
       !
       address-family ipv6
         redistribute kernel
-        neighbor 2001::192:0:2:250 activate
-        neighbor 2001::192:0:2:250 soft-reconfiguration inbound
+        neighbor 2001::192:0:2:1 activate
+        neighbor 2001::192:0:2:1 soft-reconfiguration inbound
       exit-address-family
       !
       address-family ipv4
-        neighbor 192.0.2.250 activate
-        neighbor 192.0.2.250 soft-reconfiguration inbound
+        neighbor 192.0.2.1 activate
+        neighbor 192.0.2.1 soft-reconfiguration inbound
       exit-address-family
     !
