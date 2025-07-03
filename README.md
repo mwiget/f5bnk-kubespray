@@ -45,7 +45,7 @@ make clean-all
 
 ## Resources
 
-- F5 BIG-IP Next for Kubernetes on NVIDIA BlueField-3 https://clouddocs.f5.com/bigip-next-for-kubernetes/2.0.0-GA/
+- https://clouddocs.f5.com/bigip-next-for-kubernetes/2.0.0-GA/
 - https://github.com/kubernetes-sigs/kubespray (source of sample inventory)
 - https://github.com/f5devcentral/f5-bnk-nvidia-bf3-installations
 - https://docs.nvidia.com/networking/display/bluefielddpuosv460/link+aggregation
