@@ -1,0 +1,21 @@
+apiVersion: k8s.f5net.com/v1
+kind: F5BigFwPolicy
+metadata:
+  name: restrict-inbound-allow-outbound
+spec:
+  rule:
+#    - name: allow-inbound-http
+#      action: accept
+#      ipProtocol: tcp
+#      destination:
+#        ports: [ "80" ]
+    - name: allow-inbound-https
+      action: accept
+      ipProtocol: tcp
+      destination:
+        ports: [ "443" ]
+    - name: deny-other-inbound
+      action: drop
+  targetRefs:
+    - kind: GatewayClass
+      name: f5-gateway-class
