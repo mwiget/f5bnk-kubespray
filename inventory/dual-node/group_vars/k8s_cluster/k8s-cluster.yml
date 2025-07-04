@@ -370,3 +370,7 @@ kubeadm_patches: []
 
 # Set to true to remove the role binding to anonymous users created by kubeadm
 remove_anonymous_access: false
+
+kubelet_systemd_custom_units:
+  - name: "LimitNOFILE"
+    value: "65535"
