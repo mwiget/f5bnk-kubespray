@@ -38,7 +38,7 @@ echo ""
 
 echo "single request ..."
 set -x
-ssh $client "echo curl -s -w \"\nTime: %{time_total}s\nSpeed: %{speed_download} bytes/s\n\" -o /dev/null http://$VIP/test/512kb"
+ssh $client "curl -s -w \"\nTime: %{time_total}s\nSpeed: %{speed_download} bytes/s\n\" -o /dev/null http://$VIP/test/512kb"
 
 echo ""
 echo "Sending $CONCURRENT_REQUESTS for $DURATION ..."

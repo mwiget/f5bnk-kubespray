@@ -3,6 +3,9 @@ kind: F5BigFwPolicy
 metadata:
   name: restrict-inbound-allow-outbound
 spec:
+  targetRefs:
+    - kind: GatewayClass
+      name: f5-gateway-class
   rule:
 #    - name: allow-inbound-http
 #      action: accept
@@ -16,6 +19,3 @@ spec:
         ports: [ "443" ]
     - name: deny-other-inbound
       action: drop
-  targetRefs:
-    - kind: GatewayClass
-      name: f5-gateway-class
