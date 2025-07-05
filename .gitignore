@@ -6,6 +6,5 @@ far
 *.tgz
 credentials
 .env
-*.conf
 tmp
 .vscode
