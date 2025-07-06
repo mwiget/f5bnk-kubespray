@@ -1,6 +1,7 @@
 # UPDATE_DPU_OS - Update/Install BlueField Operating System (Default: yes)
 UPDATE_DPU_OS="yes"
-ubuntu_PASSWORD='$1$BOMjxc.B$MhfAgHhiP6jd21QdjNXgD/'
+ubuntu_PASSWORD='<auto-replaced with ubuntu_password hash from .env>'
+#ubuntu_PASSWORD='$1$BOMjxc.B$MhfAgHhiP6jd21QdjNXgD/'
 
 ###############################################################################
 # Other misc configuration
@@ -8,7 +9,10 @@ ubuntu_PASSWORD='$1$BOMjxc.B$MhfAgHhiP6jd21QdjNXgD/'
 
 # MAC address of the rshim network interface (tmfifo_net0).
 NET_RSHIM_MAC=00:1a:ca:ff:ff:11
-MTU=9100
+
+HOSTNAME="host-dpu"
+MTU=9100              # MTU for interfaces of br-lag ovs bridge
+EXTERNAL_VLAN=210     # where to apply firewall rules
 
 # bfb_modify_os – SHELL function called after the file system is extracted on the target partitions.
 # It can be used to modify files or create new files on the target file system mounted under
@@ -19,9 +23,8 @@ MTU=9100
 bfb_modify_os()
 {
     # Set hostname
-    local hname="rome1-dpu"
-    echo ${hname} > /mnt/etc/hostname
-    echo "127.0.0.1 ${hname}" >> /mnt/etc/hosts
+    echo "${HOSTNAME}" > /mnt/etc/hostname
+    echo "127.0.0.1 ${HOSTNAME}" >> /mnt/etc/hosts
 
     # Overwrite the tmfifo_net0 interface to set correct IP address
     # This is relevant in case of multiple DPU system.
@@ -171,50 +174,50 @@ write_files:
       echo "Clearing all OpenFlow rules on br-lag..."
       ovs-ofctl del-flows "br-lag"
 
-      echo "Installing VLAN 210 allow rules for ARP, ICMP, SSH, HTTP, HTTPS, BGP..."
+      echo "Installing VLAN \$EXTERNAL_VLAN allow rules for ARP, ICMP, SSH, HTTP, HTTPS, BGP..."
 
       # === IPv4 Rules ===
 
       # ARP
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x0806,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0806,actions=NORMAL"
 
       # IPv4 - SSH
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x0800,nw_proto=6,tp_dst=22,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0800,nw_proto=6,tp_dst=22,actions=NORMAL"
 
       # IPv4 - HTTP
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x0800,nw_proto=6,tp_dst=80,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0800,nw_proto=6,tp_dst=80,actions=NORMAL"
 
       # IPv4 - HTTPS
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x0800,nw_proto=6,tp_dst=443,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0800,nw_proto=6,tp_dst=443,actions=NORMAL"
 
       # IPv4 - BGP
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x0800,nw_proto=6,tp_dst=179,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0800,nw_proto=6,tp_dst=179,actions=NORMAL"
 
       # IPv4 - ICMP
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x0800,nw_proto=1,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0800,nw_proto=1,actions=NORMAL"
 
       # === IPv6 Rules ===
 
       # IPv6 - SSH
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x86dd,nw_proto=6,tp_dst=22,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x86dd,nw_proto=6,tp_dst=22,actions=NORMAL"
 
       # IPv6 - HTTP
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x86dd,nw_proto=6,tp_dst=80,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x86dd,nw_proto=6,tp_dst=80,actions=NORMAL"
 
       # IPv6 - HTTPS
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x86dd,nw_proto=6,tp_dst=443,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x86dd,nw_proto=6,tp_dst=443,actions=NORMAL"
 
       # IPv6 - BGP
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x86dd,nw_proto=6,tp_dst=179,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x86dd,nw_proto=6,tp_dst=179,actions=NORMAL"
 
       # IPv6 - ICMPv6 (ND, ping, RA, RS, etc.)
-      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=210,dl_type=0x86dd,nw_proto=58,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x86dd,nw_proto=58,actions=NORMAL"
 
-      # === Deny other traffic on VLAN 210 ===
+      # === Deny other traffic on VLAN \$EXTERNAL_VLAN ===
 
-      ovs-ofctl add-flow "br-lag" "priority=100,in_port=bond0,dl_vlan=210,actions=drop"
+      ovs-ofctl add-flow "br-lag" "priority=100,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,actions=drop"
 
-      # === Allow all other traffic (non-VLAN 210) ===
+      # === Allow all other traffic (non-VLAN \$EXTERNAL_VLAN) ===
 
       ovs-ofctl add-flow "br-lag" "priority=0,actions=NORMAL"
 
@@ -222,7 +225,7 @@ write_files:
       ovs-ofctl dump-flows br-lag
       echo ""
 
-      echo " Done. VLAN 210 now permits ARP, ICMP, SSH, HTTP, HTTPS, BGP for both IPv4 and IPv6."
+      echo " Done. VLAN \$EXTERNAL_VLAN now permits ARP, ICMP, SSH, HTTP, HTTPS, BGP for both IPv4 and IPv6."
   - path: /usr/local/sbin/ovs-flows-named.sh
     permissions: '0755'
     content: |
