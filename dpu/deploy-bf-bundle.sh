@@ -51,4 +51,4 @@ done
 
 echo ""
 echo "Re-apply netplan on host ..."
-ssh $node "sudo netplan apply"
+ssh $node "sudo systemctl stop ovsdb-server; sudo netplan apply"

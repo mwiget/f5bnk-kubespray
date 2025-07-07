@@ -8,7 +8,9 @@
 - DPU nodes are derived from $DPU_HOSTS by adding '-dpu' and must be reachable via ssh
 - check content of bf.conf.template
 
+```
 ./generate-bf-conf.sh
+```
 
 Script uses the node list found in $DPU_HOSTS and generates individual DPU bf-<node-dpu>.conf files. 
 Examine the generated bf-*.conf files for any obvious errors.
@@ -17,7 +19,9 @@ Examine the generated bf-*.conf files for any obvious errors.
 
 Now burn the DPU image with generated configuration file indvidually (use separate shells to track progress)
 
+```
 ./deploy-bf-bundle.sh bf-<node>-dpu.conf
+```
 
 Script first downloads $BFB_IMAGE locally unless already present, then uploads it to the node (extracted name
 from the provided config file) together with the bf-<node>-dpu.conf file, then remotely executes bfb-install via

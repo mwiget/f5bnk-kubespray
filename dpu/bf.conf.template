@@ -29,7 +29,7 @@ bfb_modify_os()
     # This is relevant in case of multiple DPU system.
     cat << EOFNET > /mnt/var/lib/cloud/seed/nocloud-net/network-config
 version: 2
-renderer: NetworkManager
+renderer: networkd
 ethernets:
   tmfifo_net0:
     dhcp4: false
@@ -38,6 +38,12 @@ ethernets:
   oob_net0:
     dhcp4: true
     dhcp6: true
+    accept-ra: true
+    dhcp4-overrides:
+      route-metric: 10
+    dhcp6-overrides:
+      route-metric: 10
+
 EOFNET
 
     # Modules for kubernetes and DPDK
@@ -180,6 +186,10 @@ write_files:
       # ARP
       ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0806,actions=NORMAL"
 
+      # DNS
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0800,nw_proto=6,tp_dst=53,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0800,nw_proto=17,tp_dst=53,actions=NORMAL"
+
       # IPv4 - SSH
       ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0800,nw_proto=6,tp_dst=22,actions=NORMAL"
 
@@ -196,6 +206,10 @@ write_files:
       ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x0800,nw_proto=1,actions=NORMAL"
 
       # === IPv6 Rules ===
+
+      # IPv6 - DNS
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x86dd,nw_proto=6,tp_dst=53,actions=NORMAL"
+      ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x86dd,nw_proto=17,tp_dst=53,actions=NORMAL"
 
       # IPv6 - SSH
       ovs-ofctl add-flow "br-lag" "priority=200,in_port=bond0,dl_vlan=\$EXTERNAL_VLAN,dl_type=0x86dd,nw_proto=6,tp_dst=22,actions=NORMAL"
