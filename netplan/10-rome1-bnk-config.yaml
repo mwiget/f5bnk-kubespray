@@ -7,6 +7,7 @@ network:
       virtual-function-count: 4
       dhcp4: no
       dhcp6: no
+      mtu: 9100
     enp193s0f1np1:
       virtual-function-count: 4
       dhcp4: no
@@ -16,45 +17,32 @@ network:
       link: enp193s0f1np1
       dhcp4: no
       dhcp6: no
+      mtu: 9100
     enp193s0f1v0:
       link: enp193s0f1np1
       dhcp4: no
       dhcp6: no
-
+      mtu: 9100
 
   vlans:
     external:
       id: 210
       link: enp193s0f0np0
-      mtu: 1496
+      mtu: 9028
       addresses:
         - 192.0.2.62/24
         - 2001::192:0:2:62/64
     internal:
       id: 200
       link: enp193s0f0np0
-      mtu: 1496
+      mtu: 9028
       addresses:
         - 198.18.100.62/24
         - 2001::198:18:100:62/64
     storage:
       id: 205
       link: enp193s0f0np0
-      mtu: 1496
+      mtu: 9028
       addresses:
         - 198.18.200.62/24
         - 2001::198:18:200:62/64
-
-#  bonds:
-#    internal:
-#      interfaces:
-#        - enp193s0f0v1
-#        - enp193s0f1v1
-#      parameters:
-#        mode: 802.3ad
-#        lacp-rate: fast
-#        transmit-hash-policy: layer3+4
-#        mii-monitor-interval: 100
-#      dhcp4: no
-#      addresses:
-#        - 198.18.100.62/24

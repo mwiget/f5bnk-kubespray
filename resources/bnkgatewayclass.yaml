@@ -10,7 +10,7 @@ spec:
   containerPlatform: Generic
   telemetry:
     loggingSubsystem:
-      enabled: true
+      enabled: false
     metricSubsystem:
       enabled: true
   certificate:
