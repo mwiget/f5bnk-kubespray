@@ -5,6 +5,7 @@ metadata:
   name: external
 spec:
   name: external
+  mtu: 9100
   tag: 210
   interfaces:
     - "1.1"
@@ -24,6 +25,7 @@ metadata:
   name: internal
 spec:
   name: internal
+  mtu: 9100
   tag: 200
   interfaces:
     - "1.2"
@@ -43,6 +45,7 @@ metadata:
   name: storage
 spec:
   name: storage
+  mtu: 9100
   tag: 205
   interfaces:
     - "1.2"
