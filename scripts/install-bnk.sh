@@ -89,7 +89,12 @@ echo ""
 echo "Install F5 Lifecycle Opertaor (FLO) ..."
 
 export JWT=$(cat ~/.jwt)
-envsubst < resources/flo-value.yaml >/tmp/flo-value.yaml
+if cut -d\. -f1 ~/.jwt | base64 -d | grep tst; then
+  envsubst < resources/flo-value-tst.yaml >/tmp/flo-value.yaml
+else
+  envsubst < resources/flo-value.yaml >/tmp/flo-value.yaml
+fi
+
 helm upgrade --install flo oci://repo.f5.com/charts/f5-lifecycle-operator --version v1.198.4-0.1.36 -f /tmp/flo-value.yaml --namespace f5-operators
 
 # no longer required with 2.1.0
