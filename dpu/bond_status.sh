@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ----------------------------------------------------------------------
-# bond0_full_report.sh
+# bond_status.sh
 #   • Prints a nicely‑formatted “global” section for a bonding device.
 #   • Prints a compact, pipe‑separated table for each slave (your awk
 #     program) – the global Partner‑MAC address is injected automatically.

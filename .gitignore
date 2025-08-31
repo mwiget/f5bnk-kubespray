@@ -8,5 +8,6 @@ credentials
 .env
 tmp
 .vscode
-*.conf
+bf-firewall-jumbo-*.conf
 f5-bigip-k8s-manifest*
+old

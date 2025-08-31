@@ -1,9 +1,6 @@
 #!/bin/bash
 
 BFB_IMAGE="bf-bundle-2.9.2-32_25.02_ubuntu-22.04_prod.bfb"
-#BFB_IMAGE="bf-bundle-3.0.0-135_25.04_ubuntu-22.04_prod.bfb"
-#BFB_IMAGE="rhcos_4.19.0-ec.4_installer_2025-04-23_07-48-42.bfb"
-#BFB_IMAGE="rhcos_4.19.3_coreos-installer_2025-08-08_16-28-09.bfb"
 
 BFB_CONFIG=$1
 if [ -z $BFB_CONFIG ]; then
@@ -18,4 +15,4 @@ fi
 
 echo "installing image using config $BFB_CONFIG ..."
 sudo bfb-install --rshim rshim0 --config $BFB_CONFIG --bfb $BFB_IMAGE
-ssh-keygen -f "/home/mwiget/.ssh/known_hosts" -R "192.168.100.2"
+ssh-keygen -f ~/.ssh/known_hosts -R 192.168.100.2 || true
