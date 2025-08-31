@@ -1,13 +1,12 @@
-#
-#
+SHELL := /bin/bash
 
 all: cluster kubeconfig single-node-fix-coredns sriov cert-manager grafana \
-	nvidia-gpu-operator bnk bnk-gateway-class
+	nvidia-gpu-operator bnk
 
 cluster:
-	set -a; source ./.env; $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z,U \
+	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z \
   	--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa,Z" \
-    quay.io/kubespray/kubespray:v2.28.0 \
+    quay.io/kubespray/kubespray:v2.28.1 \
 		ansible-playbook -i /inventory/inventory.yaml \
 		--private-key /root/.ssh/id_rsa cluster.yml \
 		-e ingress_nginx_enabled=false
@@ -36,7 +35,7 @@ grafana:
 	kubectl get ns monitoring || kubectl create ns monitoring
 	kubectl apply -f resources/prometheus-cert.yaml -n monitoring
 	helm repo add prometheus-community \
-		 https://prometheus-community.github.io/helm-charts
+		 https://prometheus-community.github.io/helm-charts --force-update
 	helm install prometheus prometheus-community/kube-prometheus-stack \
 			--create-namespace --namespace monitoring \
 			--values resources/prometheus-values.yaml || echo "already installed"
@@ -47,7 +46,7 @@ grafana:
 	kubectl apply -f resources/grafana-service.yaml -n monitoring
 
 nvidia-gpu-operator:
-	helm repo add nvidia https://nvidia.github.io/gpu-operator
+	helm repo add nvidia https://nvidia.github.io/gpu-operator --force-update
 	helm repo update
 	helm upgrade --install --namespace gpu-operator --create-namespace \
 		gpu-operator nvidia/gpu-operator
@@ -56,12 +55,13 @@ bnk:
 	./scripts/check-requirements.sh
 	./scripts/decode-jwt.sh ~/.jwt
 	./scripts/install-bnk.sh
-
-bnk-gateway-class:
 	./scripts/deploy-bnkgwc.sh
 
+clean-bnk:
+	kubectl delete -f resources/bnkgatewayclass.yaml || true
+
 clean-all:
-	set -a; source ./.env ; $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z,U \
+	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z \
   	--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa,Z" \
     quay.io/kubespray/kubespray:v2.28.0 \
 		ansible-playbook -i /inventory/inventory.yaml --private-key /root/.ssh/id_rsa reset.yml \

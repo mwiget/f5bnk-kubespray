@@ -50,15 +50,6 @@ echo "Install zebos bgp config  ..."
 # BGP ConfigMap that includes ZebOS config
 kubectl apply -f resources/zebos-bgp-cm.yaml
 
-echo ""
-echo "kubectl exec -ti ds/f5-tmm -c debug tmctl -d blade tmm/xnet/device_proved ..."
-echo ""
-kubectl exec -it ds/f5-tmm -c debug -- tmctl -d blade tmm/xnet/device_probed
-
-echo ""
-echo "kubectl exec -ti ds/f5-tmm -c debug -- ip -br a ..."
-kubectl exec -ti ds/f5-tmm -c debug -- ip -br a
-
 ./scripts/check-f5-spk-vlans.sh
 
 echo ""

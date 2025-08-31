@@ -9,3 +9,4 @@ credentials
 tmp
 .vscode
 *.conf
+f5-bigip-k8s-manifest*

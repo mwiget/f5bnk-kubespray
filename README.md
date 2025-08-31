@@ -1,6 +1,7 @@
 # f5bnk-kubespray
 
-Deploy F5 BNK https://clouddocs.f5.com/bigip-next-for-kubernetes/2.0.0-GA/ on baremetal node
+Deploy F5 BNK https://clouddocs.f5.com/bigip-next-for-kubernetes/latest/
+on baremetal node
 with Nvidia Bluefield-3 using kubespray, connected via LAG to the DC Fabric.
 
 ![Dual node lab setup](./two-node-lab-setup.jpg)
@@ -14,6 +15,7 @@ with Nvidia Bluefield-3 using kubespray, connected via LAG to the DC Fabric.
 - baremetal server with Nvidia Bluefield-3
 - NFS server, referenced in resources/storageclass.yaml. Adjust accordingly
 - One or two Ethernet switch with LACP based LAG support (MC-LAG or EVPN-MH in case of dual attached nodes to different leafs)
+- Set TMM_DEFAULT_MTU in resources/bnkgatewayclass.yaml to match DPU and host network MTU.
 
 
 Example /etc/exports flags

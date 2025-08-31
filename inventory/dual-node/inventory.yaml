@@ -4,8 +4,6 @@ all:
     kube_network_plugin: calico
     kube_network_plugin_multus: true
     kube_network_plugin_multus_ovs: false
-    sysctl_custom:
-      fs.inotify.max_user_watches: 524288
     pam_limits:
       - domain: "*"
         type: soft
@@ -23,6 +21,13 @@ all:
       ansible_become: true
       ip: 192.168.68.62
       access_ip: 192.168.68.62
+      additional_sysctl:
+        - name: fs.inotify.max_user_watches
+          value: 524288
+        - name: fs.inotify.max_user_instances
+          value: 8192
+        - name: fs.inotify.max_queued_events
+          value: 16384
 
     rome1-dpu:
       ansible_host: 192.168.68.79
@@ -41,6 +46,13 @@ all:
       ansible_become: true
       ip: 192.168.68.73
       access_ip: 192.168.68.73
+      additional_sysctl:
+        - name: fs.inotify.max_user_watches
+          value: 524288
+        - name: fs.inotify.max_user_instances
+          value: 8192
+        - name: fs.inotify.max_queued_events
+          value: 16384
 
     milan1-dpu:
       ansible_host: 192.168.68.96

@@ -17,16 +17,13 @@ Examine the generated bf-*.conf files for any obvious errors.
 
 ### Deployment
 
-Now burn the DPU image with generated configuration file indvidually (use separate shells to track progress)
+Upload deploy-bf-bund.sh script plus the generated DPU config file to the host node with the dpu and 
+burn the DPU image with generated configuration file with
 
 ```
-./deploy-bf-bundle.sh bf-<node>-dpu.conf
+./deploy-bf-bundle.sh <dpu conf file>
 ```
 
-Script first downloads $BFB_IMAGE locally unless already present, then uploads it to the node (extracted name
-from the provided config file) together with the bf-<node>-dpu.conf file, then remotely executes bfb-install via
-ssh. Once complete, it waits until the dpu can be reached via its oob-net0 interface and finally pushes the ssh public
-key to it for passwordless access (required by kubespray)
 
 ### Caveats
 

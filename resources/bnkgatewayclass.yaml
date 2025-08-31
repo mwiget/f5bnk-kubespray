@@ -6,7 +6,8 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: bnkgatewayclass-dpu
 spec:
-  manifestVersion: "2.0.0-1.7.8-0.3.37"
+  manifestVersion: "2.1.0-3.1736.1-0.1.27"
+  storageClassName: "nfs"
   containerPlatform: Generic
   telemetry:
     loggingSubsystem:
@@ -45,6 +46,14 @@ spec:
       enabled: false
     maintenanceMode:
       enabled: false
+    envDiscovery:
+      enabled: true
+      stopOnFail: true
+      runAfterSuccess: true
+    cneController:
+      env:
+      - name: "TMM_DEFAULT_MTU"
+        value: "9000"
     pseudoCNI:
       env:
       - name: "EXCLUDE_CIDR"
@@ -53,6 +62,8 @@ spec:
       env:
       - name: "TMM_CALICO_ROUTER"
         value: "default"
+      - name: "TMM_DEFAULT_MTU"
+        value: "9000"
       #      - name: "TMM_LOG_LEVEL"
       #        value: "Debug" 
  
