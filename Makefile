@@ -1,9 +1,11 @@
 SHELL := /bin/bash
 
-all: cluster kubeconfig single-node-fix-coredns sriov cert-manager grafana \
-	nvidia-gpu-operator bnk
+all: cluster bnk
 
-cluster:
+cluster: k8s-cluster kubeconfig single-node-fix-coredns sriov \
+	cert-manager grafana nvidia-gpu-operator
+
+k8s-cluster:
 	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z \
   	--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa,Z" \
     quay.io/kubespray/kubespray:v2.28.1 \
