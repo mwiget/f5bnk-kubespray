@@ -12,7 +12,8 @@ client=rome1
 
 set -e
 
-ssh $client sudo ip route add 198.19.19.0/24 via 192.0.2.202 || true
+ssh $client sudo ip route del 198.19.19.0/24 || true
+ssh $client sudo ip route add 198.19.19.0/24 via 198.18.100.202 || true
 
 
 echo "scaling $DEPLOYMENT to $REPLICAS replicas ..."
@@ -36,7 +37,11 @@ echo ""
 kubectl get deployment -n $NAMESPACE $DEPLOYMENT
 echo ""
 
-echo "single request ..."
+echo "single request (small packet) ..."
+set -x
+ssh $client "curl -s -w \"\nTime: %{time_total}s\nSpeed: %{speed_download} bytes/s\n\" -o /dev/null http://$VIP"
+
+echo "single request (512kb) ..."
 set -x
 ssh $client "curl -s -w \"\nTime: %{time_total}s\nSpeed: %{speed_download} bytes/s\n\" -o /dev/null http://$VIP/test/512kb"
 

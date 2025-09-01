@@ -2,4 +2,8 @@
 
 node=$1
 [ -z "$node" ] && { echo "Usage: $0 <node>"; exit 1; }
-ssh $node "sudo ovs-vsctl show; ip -br l; cat /proc/net/bonding/bond0; ifconfig -a |grep mtu; echo "hw-offload: "; sudo ovs-vsctl get Open_vSwitch . other_config:hw-offload; sudo ovs-vsctl show"
+ssh $node "sudo ovs-vsctl show; ip -br l; \
+  cat /proc/net/bonding/bond0; \
+  ifconfig -a |grep mtu; \
+  echo ""; echo -n "hw-offload: "; sudo ovs-vsctl get Open_vSwitch . other_config:hw-offload; \
+  echo ""; sudo ovs-vsctl show"
