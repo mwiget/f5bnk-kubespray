@@ -1,8 +1,8 @@
 #!/bin/bash
-REPLICAS=10
+REPLICAS=20
 DURATION=${1:-10s}
 CONCURRENT_REQUESTS=100
-THREADS=10
+THREADS=20
 VIP="198.19.19.50"
 #VIP="198.19.19.100"
 NAMESPACE=red
@@ -13,7 +13,7 @@ client=rome1
 set -e
 
 ssh $client sudo ip route del 198.19.19.0/24 || true
-ssh $client sudo ip route add 198.19.19.0/24 via 198.18.100.202 || true
+ssh $client sudo ip route add 198.19.19.0/24 via 192.0.2.201 || true
 
 
 echo "scaling $DEPLOYMENT to $REPLICAS replicas ..."
@@ -46,5 +46,13 @@ set -x
 ssh $client "curl -s -w \"\nTime: %{time_total}s\nSpeed: %{speed_download} bytes/s\n\" -o /dev/null http://$VIP/test/512kb"
 
 echo ""
-echo "Sending $CONCURRENT_REQUESTS for $DURATION ..."
+echo "Sending $CONCURRENT_REQUESTS 512kb for $DURATION ..."
 ssh $client "wrk -t$THREADS -c$CONCURRENT_REQUESTS -d$DURATION --latency http://$VIP/test/512kb"
+
+echo ""
+echo "Sending $CONCURRENT_REQUESTS 10mb for $DURATION ..."
+ssh $client "wrk -t$THREADS -c$CONCURRENT_REQUESTS -d$DURATION --latency http://$VIP/test/10mb"
+
+echo ""
+echo "Sending $CONCURRENT_REQUESTS 100mb for $DURATION ..."
+ssh $client "wrk -t$THREADS -c$CONCURRENT_REQUESTS -d$DURATION --latency http://$VIP/test/100mb"

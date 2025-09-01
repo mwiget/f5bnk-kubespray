@@ -3,7 +3,7 @@ all:
     schedule_on_control_plane: true
     kube_network_plugin: calico
     kube_network_plugin_multus: true
-    kube_network_plugin_multus_ovs: false
+    calico_mtu: 9000
     pam_limits:
       - domain: "*"
         type: soft

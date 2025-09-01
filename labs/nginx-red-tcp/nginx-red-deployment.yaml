@@ -6,7 +6,7 @@ metadata:
   labels:
     app: nginx-tcp
 spec:
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: nginx-tcp
@@ -15,6 +15,8 @@ spec:
       labels:
         app: nginx-tcp
     spec:
+      #      nodeSelector:
+      #        kubernetes.io/hostname: rome1
       volumes:
       - name: testfile-dir
         emptyDir: {}
@@ -23,7 +25,7 @@ spec:
         image: busybox
         command: ["/bin/sh", "-c"]
         args:
-          - mkdir -p /testdir && dd if=/dev/urandom of=/testdir/512kb bs=512K count=1
+          - mkdir -p /testdir && dd if=/dev/urandom of=/testdir/512kb bs=512K count=1 && dd if=/dev/urandom of=/testdir/10mb bs=1024K count=10 && dd if=/dev/urandom of=/testdir/100mb bs=1024K count=100
         volumeMounts:
         - name: testfile-dir
           mountPath: /testdir
