@@ -1,17 +1,22 @@
 SHELL := /bin/bash
 
-all: cluster bnk
+all: cluster extras bnk
 
-cluster: k8s-cluster kubeconfig single-node-fix-coredns sriov \
-	cert-manager grafana nvidia-gpu-operator
+cluster: k8s-cluster kubeconfig single-node-fix-coredns sriov
+
+extras: sriov cert-manager grafana nvidia-gpu-operator
+
+kubespray:
+	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z \
+  	--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa,Z" \
+    quay.io/kubespray/kubespray:v2.28.1 bash
 
 k8s-cluster:
 	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z \
   	--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa,Z" \
     quay.io/kubespray/kubespray:v2.28.1 \
 		ansible-playbook -i /inventory/inventory.yaml \
-		--private-key /root/.ssh/id_rsa cluster.yml \
-		-e ingress_nginx_enabled=false
+		--private-key /root/.ssh/id_rsa -e ingress_nginx_enabled=false cluster.yml
 
 kubeconfig:
 	./scripts/get-kubeconfig.sh
@@ -62,9 +67,17 @@ bnk:
 clean-bnk:
 	kubectl delete -f resources/bnkgatewayclass.yaml || true
 
-clean-all:
-	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z \
-  	--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa,Z" \
-    quay.io/kubespray/kubespray:v2.28.0 \
-		ansible-playbook -i /inventory/inventory.yaml --private-key /root/.ssh/id_rsa reset.yml \
-		-e reset_confirmation=yes
+clean-dpu:
+	set -a; source ./.env && ./scripts/cleanup-dpu-k8s.sh $$(pwd)/inventory/$${CLUSTER}/inventory.yaml
+
+clean-all: clean-dpu
+	set -a; source ./.env && \
+	 $${DOCKER} run --rm -ti \
+	   --mount type=bind,source="$$(pwd)/inventory/$${CLUSTER}",dst=/inventory,Z \
+	   --mount type=bind,source="$${SSH_PRIVATE_KEY}",dst=/root/.ssh/id_rsa,Z \
+	   quay.io/kubespray/kubespray:v2.28.1 \
+	   /bin/bash -lc '\
+	     ansible-playbook -i /inventory/inventory.yaml --private-key /root/.ssh/id_rsa playbooks/facts.yml -vv && \
+	     ansible-playbook -i /inventory/inventory.yaml --private-key /root/.ssh/id_rsa reset.yml \
+	       -e reset_confirmation=yes --limit "all:!*-dpu"'
+

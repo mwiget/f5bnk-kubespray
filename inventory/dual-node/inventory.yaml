@@ -33,10 +33,10 @@ all:
       ansible_host: 192.168.68.79
       ansible_user: ubuntu
       ansible_become: true
-      ip: 192.168.68.79
       access_ip: 192.168.68.79
-      node_labels:
-        "app": "f5-tmm"
+      ip: 192.168.68.79
+      kubelet_node_labels:
+      app: f5-tmm
       node_taints:
         - "dpu=true:NoSchedule"
 
@@ -58,10 +58,10 @@ all:
       ansible_host: 192.168.68.96
       ansible_user: ubuntu
       ansible_become: true
-      ip: 192.168.68.96
       access_ip: 192.168.68.96
-      node_labels:
-        "app": "f5-tmm"
+      ip: 192.168.68.96
+      kubelet_node_labels:
+         app: f5-tmm
       node_taints:
         - "dpu=true:NoSchedule"
 
