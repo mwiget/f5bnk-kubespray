@@ -32,13 +32,6 @@ spec:
     "cniVersion": "0.3.1",
     "name": "vf-external",
     "type": "sriov",
-    "vlan": 210,
-    "vlanQoS": 0,
-    "spoofchk": "off",
-    "trust": "on",
-    "linkState": "enable",
-    "minTxRate": 0,
-    "maxTxRate": 0,
     "capabilities": {
       "mac": true,
       "ips": true
