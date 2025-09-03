@@ -1,0 +1,52 @@
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: vf-internal
+  annotations:
+    k8s.v1.cni.cncf.io/resourceName: nvidia.com/bf3_p0_vf
+spec:
+  config: '{
+    "cniVersion": "0.3.1",
+    "name": "vf-internal",
+    "type": "sriov",
+    "capabilities": {
+      "mac": true,
+      "ips": true
+    },
+    "ipam": {
+      "type": "host-local",
+      "subnet": "198.18.100.0/24",
+      "rangeStart": "198.18.100.100",
+      "rangeEnd": "198.18.100.120"
+    }
+  }'
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: vf-external
+  annotations:
+    k8s.v1.cni.cncf.io/resourceName: nvidia.com/bf3_p0_vf
+spec:
+  config: '{
+    "cniVersion": "0.3.1",
+    "name": "vf-external",
+    "type": "sriov",
+    "vlan": 210,
+    "vlanQoS": 0,
+    "spoofchk": "off",
+    "trust": "on",
+    "linkState": "enable",
+    "minTxRate": 0,
+    "maxTxRate": 0,
+    "capabilities": {
+      "mac": true,
+      "ips": true
+    },
+    "ipam": {
+      "type": "host-local",
+      "subnet": "192.0.2.0/24",
+      "rangeStart": "192.0.2.100",
+      "rangeEnd": "192.0.2.120"
+    }
+  }'

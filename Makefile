@@ -4,17 +4,17 @@ all: cluster extras bnk
 
 cluster: k8s-cluster kubeconfig single-node-fix-coredns sriov
 
-extras: sriov cert-manager grafana nvidia-gpu-operator
+extras: cert-manager grafana nvidia-gpu-operator
 
 kubespray:
-	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z \
-  	--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa,Z" \
-    quay.io/kubespray/kubespray:v2.28.1 bash
+	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory \
+		--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa" \
+		quay.io/kubespray/kubespray:v2.28.1 bash
 
 k8s-cluster:
-	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory,Z \
-  	--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa,Z" \
-    quay.io/kubespray/kubespray:v2.28.1 \
+	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory \
+		--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa" \
+		quay.io/kubespray/kubespray:v2.28.1 \
 		ansible-playbook -i /inventory/inventory.yaml \
 		--private-key /root/.ssh/id_rsa -e ingress_nginx_enabled=false cluster.yml
 
@@ -31,6 +31,7 @@ sriov:
 	kubectl apply -f resources/sriov-cni-daemonset.yaml
 	kubectl apply -f resources/sriovdp-daemonset.yaml
 	kubectl apply -f resources/nad-sf.yaml
+	kubectl apply -f resources/nad-vf.yaml
 
 cert-manager:
 	helm repo add jetstack https://charts.jetstack.io --force-update
@@ -73,8 +74,8 @@ clean-dpu:
 clean-all: clean-dpu
 	set -a; source ./.env && \
 	 $${DOCKER} run --rm -ti \
-	   --mount type=bind,source="$$(pwd)/inventory/$${CLUSTER}",dst=/inventory,Z \
-	   --mount type=bind,source="$${SSH_PRIVATE_KEY}",dst=/root/.ssh/id_rsa,Z \
+	   --mount type=bind,source="$$(pwd)/inventory/$${CLUSTER}",dst=/inventory \
+	   --mount type=bind,source="$${SSH_PRIVATE_KEY}",dst=/root/.ssh/id_rsa \
 	   quay.io/kubespray/kubespray:v2.28.1 \
 	   /bin/bash -lc '\
 	     ansible-playbook -i /inventory/inventory.yaml --private-key /root/.ssh/id_rsa playbooks/facts.yml -vv && \
