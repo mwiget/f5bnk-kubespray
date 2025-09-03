@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: iperf3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iperf3
+  namespace: iperf3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iperf3
+  template:
+    metadata:
+      labels:
+        app: iperf3
+      annotations:
+        k8s.v1.cni.cncf.io/networks: default/vf-internal
+    spec:
+      containers:
+      - name: iperf3
+        image: public.ecr.aws/docker/library/alpine:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/ash", "-c"]
+        args:
+          - >
+            apk add --no-cache curl iperf3 wrk &&
+            iperf3 -s
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        resources:
+          limits:
+            nvidia.com/bf3_p0_vf: "1"
+          requests:
+            nvidia.com/bf3_p0_vf: "1"

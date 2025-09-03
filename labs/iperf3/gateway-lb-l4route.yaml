@@ -1,0 +1,71 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: f5-gateway-class
+spec:
+  controllerName: "f5.com/default-f5-cne-controller"
+  description: "F5 BIG-IP Kubernetes Gateway"
+---
+apiVersion: k8s.f5net.com/v1
+kind: F5BnkGateway
+metadata:
+  name: f5-bnkgateway
+  namespace: default
+spec:
+  ingressConfig:
+    defaultListenerNetworks:
+      - name: "default_ipv4"
+        ipv4BaseCidr: "198.19.19.0/24"
+        startAddress: "198.19.19.50"
+        endAddress: "198.19.19.59"
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: f5-l4-gateway
+  namespace: default
+spec:
+  gatewayClassName: f5-gateway-class
+  infrastructure:
+    parametersRef:
+      group: k8s.f5net.com
+      kind: F5BnkGateway
+      name: f5-bnkgateway
+  listeners:
+    - name: tcp-5201
+      protocol: TCP
+      port: 5201
+      allowedRoutes:
+        kinds:
+          - kind: L4Route
+            group: gateway.k8s.f5net.com
+        namespaces:
+          from: All
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iperf3-backend
+  namespace: iperf3
+spec:
+  clusterIP: None
+  ports:
+    - name: tcp-5201
+      port: 5201
+      targetPort: 5201
+---
+apiVersion: gateway.k8s.f5net.com/v1
+kind: L4Route
+metadata:
+  name: iperf3-route
+  namespace: iperf3
+spec:
+  protocol: TCP
+  parentRefs:
+    - name: f5-l4-gateway
+      sectionName: tcp-5201
+      namespace: default
+  rules:
+    - backendRefs:
+        - name: iperf3-backend
+          port: 5201
