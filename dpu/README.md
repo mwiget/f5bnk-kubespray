@@ -17,10 +17,6 @@ attach via multus to VFs and be connected to internal VLAN 200 without specifyin
 - PF interface however passes all VLANs like a trunk port, allowing other VLANs be switched thru,
 like storage. 
 
-### Caveats
-
-- VLAN host interfaces get removed during the DPU imaging process. Re-apply by running `sudo netplan apply` on the 
-host. Script deploy-bf-bundle.sh does it automatically, but worth checking if all interfaces are present on the host.
 
 ### Check DPU bond0, MTU and ovs-vsctl status
 

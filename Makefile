@@ -6,10 +6,6 @@ cluster: k8s-cluster kubeconfig single-node-fix-coredns sriov
 
 extras: cert-manager grafana nvidia-gpu-operator
 
-unlock-keychain:
-	# required on OSX when running within tmux/ssh
-	security unlock-keychain  ~/Library/Keychains/login.keychain-db
-
 kubespray:
 	set -a; source ./.env && $$DOCKER run --rm -ti --mount type=bind,source="$$(pwd)"/inventory/$$CLUSTER/,dst=/inventory \
 		--mount type=bind,source="$$SSH_PRIVATE_KEY,dst=/root/.ssh/id_rsa" \

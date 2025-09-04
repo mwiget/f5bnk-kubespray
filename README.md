@@ -45,6 +45,13 @@ make
 make clean-all
 ```
 
+### Caveats
+
+- VLAN host interfaces get removed during the DPU imaging process. Re-apply by running `sudo netplan apply` on the 
+host. Script deploy-bf-bundle.sh does it automatically, but worth checking if all interfaces are present on the host.
+- High speed interfaces (from DPU) on worker nodes must have provisioned VF's on both physical ports. FLO checks those
+prior to deploying into namespace f5-utils
+
 ## Resources
 
 - https://clouddocs.f5.com/bigip-next-for-kubernetes/2.0.0-GA/
