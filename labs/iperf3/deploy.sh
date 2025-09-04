@@ -23,4 +23,6 @@ kubectl -n iperf3 get l4route iperf3-route -o yaml | sed -n '/status:/,$p' || tr
 echo -e "\nL4Route Endpoints:"
 kubectl -n iperf3  get Endpoints
 
+echo -e "\niperf3 pods:"
+kubectl  get pod -n iperf3 -o wide
 #./validate.sh
