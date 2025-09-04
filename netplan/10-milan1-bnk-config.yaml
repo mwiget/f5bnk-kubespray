@@ -17,42 +17,42 @@ network:
       link: enp193s0f0np0
       dhcp4: no
       dhcp6: no
-      mtu: 8928
+      mtu: 9000
     enp193s0f0v1:
       link: enp193s0f0np0
       dhcp4: no
       dhcp6: no
-      mtu: 8928
+      mtu: 9000
     enp193s0f0v2:
       link: enp193s0f0np0
       dhcp4: no
       dhcp6: no
-      mtu: 8928
+      mtu: 9000
     enp193s0f0v3:
       link: enp193s0f0np0
       dhcp4: no
       dhcp6: no
-      mtu: 8928
+      mtu: 9000
 
   vlans:
     external:
       id: 210
       link: enp193s0f0np0
-      mtu: 8928
+      mtu: 8996
       addresses:
         - 192.0.2.73/24
         - 2001::192:0:2:73/64
     internal:
       id: 200
       link: enp193s0f0np0
-      mtu: 8928
+      mtu: 8996
       addresses:
         - 198.18.100.73/24
         - 2001::198:18:100:73/64
     storage:
       id: 205
       link: enp193s0f0np0
-      mtu: 8928
+      mtu: 8996
       addresses:
         - 198.18.200.73/24
         - 2001::198:18:200:73/64
