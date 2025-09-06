@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Example
 #
@@ -9,20 +9,6 @@
 #   "kid": "v1",
 #   "jku": "https://product-tst.apis.f5networks.net/ee/v1/keys/jwks"
 # }
-# 
-# {
-#  "sub": "TST-........-....-....-....-............",
-#  "iat": 1748749444,
-#  "iss": "F5 Inc.",
-#  "aud": "urn:f5:teem",
-#  "jti": "........-....-....-....-............",
-#  "f5_order_type": "paid",
-#  "f5_sat": 1780185600
-#}
-#
-#iat    (UTC): Sun Jun  1 03:44:04 AM UTC 2025
-#f5_sat (UTC): Sun May 31 12:00:00 AM UTC 2026
-#
 
 jwt=$1
 if [[ ! -f "$jwt" ]]; then

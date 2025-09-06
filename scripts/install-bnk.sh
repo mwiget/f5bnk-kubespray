@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 SECONDS=0
@@ -7,12 +7,14 @@ echo ""
 echo "Helm Registry Login using cne_pull_64.json from ~/far/f5-far-auth-key.tgz ..."
 tar zxfO ~/far/f5-far-auth-key.tgz cne_pull_64.json | helm registry login -u _json_key_base64 --password-stdin https://repo.f5.com
 
-BNKVERSION="2.1.0-3.1736.1-0.1.27"
-echo "Pull release/f5-bigip-k8s-manifest version $BNKVERSION ..."
-helm pull oci://repo.f5.com/release/f5-bigip-k8s-manifest --version $BNKVERSION
-echo "Extracting ..."
-tar zxvf f5-bigip-k8s-manifest-$BNKVERSION.tgz
-
+# Pulling f5-bigip-k8s-manifest is only required to manually pull containers to use
+# in an air gapped local artifactory
+#
+# BNKVERSION="2.1.0-3.1736.1-0.1.27"
+# echo "Pull release/f5-bigip-k8s-manifest version $BNKVERSION ..."
+# helm pull oci://repo.f5.com/release/f5-bigip-k8s-manifest --version $BNKVERSION
+# echo "Extracting ..."
+# tar zxvf f5-bigip-k8s-manifest-$BNKVERSION.tgz
 
 echo ""
 echo "F5 Artifacts Registry (FAR) authentication token ..."

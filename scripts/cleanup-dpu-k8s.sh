@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 nodes=$(scripts/get-dpu-names.sh $1)
 echo "$nodes ..."
 

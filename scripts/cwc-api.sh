@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 NODE=$(kubectl -n f5-utils get pod -l app=cwc -o jsonpath='{.items[0].status.hostIP}')
 

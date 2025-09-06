@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Script to uninstall all Helm releases across all namespaces
 # Use with caution!

@@ -62,23 +62,34 @@ nvidia-gpu-operator:
 bnk:
 	./scripts/check-requirements.sh
 	./scripts/decode-jwt.sh ~/.jwt
+	./scripts/osx-unlock-keychain.sh
 	./scripts/install-bnk.sh
 	./scripts/deploy-bnkgwc.sh
 
 clean-bnk:
 	kubectl delete -f resources/bnkgatewayclass.yaml || true
 
-clean-dpu:
-	set -a; source ./.env && ./scripts/cleanup-dpu-k8s.sh $$(pwd)/inventory/$${CLUSTER}/inventory.yaml
+# attempt to clean up cluster withtout requiring re-imaging DPUs, but it didnt work.
+#
+#clean-dpu:
+#	set -a; source ./.env && ./scripts/cleanup-dpu-k8s.sh $$(pwd)/inventory/$${CLUSTER}/inventory.yaml
+#
+#clean-all: clean-dpu
+#	set -a; source ./.env && \
+#	 $${DOCKER} run --rm -ti \
+#	   --mount type=bind,source="$$(pwd)/inventory/$${CLUSTER}",dst=/inventory \
+#	   --mount type=bind,source="$${SSH_PRIVATE_KEY}",dst=/root/.ssh/id_rsa \
+#	   quay.io/kubespray/kubespray:v2.28.1 \
+#	   /bin/bash -lc '\
+#	     ansible-playbook -i /inventory/inventory.yaml --private-key /root/.ssh/id_rsa playbooks/facts.yml -vv && \
+#	     ansible-playbook -i /inventory/inventory.yaml --private-key /root/.ssh/id_rsa reset.yml \
+#	       -e reset_confirmation=yes --limit "all:!*-dpu"'
 
-clean-all: clean-dpu
+clean-all:
 	set -a; source ./.env && \
 	 $${DOCKER} run --rm -ti \
 	   --mount type=bind,source="$$(pwd)/inventory/$${CLUSTER}",dst=/inventory \
 	   --mount type=bind,source="$${SSH_PRIVATE_KEY}",dst=/root/.ssh/id_rsa \
 	   quay.io/kubespray/kubespray:v2.28.1 \
-	   /bin/bash -lc '\
-	     ansible-playbook -i /inventory/inventory.yaml --private-key /root/.ssh/id_rsa playbooks/facts.yml -vv && \
 	     ansible-playbook -i /inventory/inventory.yaml --private-key /root/.ssh/id_rsa reset.yml \
-	       -e reset_confirmation=yes --limit "all:!*-dpu"'
-
+	       -e reset_confirmation=yes

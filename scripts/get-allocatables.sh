@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 echo ""
 nodes=$(kubectl get nodes | grep ' Ready ' | awk '{print $1}')
 echo $nodes

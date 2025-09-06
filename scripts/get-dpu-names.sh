@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # get-dpu-nodes.sh
 # Usage: ./get-dpu-nodes.sh inventory.yaml
 

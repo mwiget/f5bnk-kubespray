@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 SECONDS=0
@@ -24,9 +24,24 @@ kubectl apply -f resources/bnkgatewayclass.yaml
 
 echo ""
 echo "waiting for pods ready in f5-utils ..."
-until kubectl wait --for=condition=Ready pods --all -n f5-utils; do
-  echo "Waiting for pods to become Ready..."
-  sleep 5
+while true; do
+  # Get all pods that are not Completed
+  pods=$(kubectl get pods -n f5-utils \
+    --field-selector=status.phase!=Succeeded \
+    -o name)
+
+  if [ -z "$pods" ]; then
+    echo "No non-Completed pods left in f5-utils."
+    break
+  fi
+
+  if kubectl wait --for=condition=Ready $pods -n f5-utils --timeout=30s; then
+    echo "All non-Completed pods in f5-utils are Ready."
+    break
+  else
+    echo "Waiting for pods (excluding Completed) to become Ready in f5-utils ..."
+    sleep 5
+  fi
 done
 echo "All pods in f5-utils namespace are Ready."
 

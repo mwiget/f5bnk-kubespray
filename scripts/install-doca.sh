@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 export DOCA_URL="https://linux.mellanox.com/public/repo/doca/2.9.2/ubuntu22.04/x86_64/"
 #export DOCA_URL="https://linux.mellanox.com/public/repo/doca/3.1.0/ubuntu22.04/x86_64/"

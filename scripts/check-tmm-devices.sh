@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 echo ""
 echo "kubectl exec -ti ds/f5-tmm -c debug tmctl -d blade tmm/xnet/device_probed ..."
 echo ""

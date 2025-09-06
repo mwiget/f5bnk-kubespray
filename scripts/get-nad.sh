@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 echo ""
 for nad in $(kubectl get network-attachment-definition -o jsonpath='{.items[*].metadata.name}'); do
   echo "$nad:"
