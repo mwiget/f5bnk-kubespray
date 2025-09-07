@@ -1,9 +1,31 @@
+## Nvidia Bluefield-3 DPU
+
+
+```
++-------------------------------------------------------+---------------+
+|                      Bluefield-3                      | Host Compute  |
+| merged eSwitch            ovs-bridge br-lag           |     Linux     |
+|----------------+--------------------------------------+---------------+
+|                |        br-lag                        |               |
+== p0            = bond0          pf0hpf <transparent>  = enp193s0f0np0 |
+|                |                                      |               |
+|    eSwtich0    = en3f0pf0sf0                          |               |
+|                = en3f0pf0sf1    pf0vf0 <push tag pop> = enp193s0f0v0  |
+|    eSwitch1    = en3f0pf0sf2    pf0vf1 <push tag pop> = enp193s0f0v1  |
+|                = en3f0pf1sf0    pf0vf2 <push tag pop> = enp193s0f0v2  |
+== p1            = en3f0pf1sf1    pf0vf3 <push tag pop> = enp193s0f0v3  |
+|                = en3f1pf1sf2                          |               |
++----------------+--------------------------------------+---------------+
+
+```
+
+
 ## Image and configure Nvidia Bluefield-3 DPU's
 
 - copy and adjust bf-firewall-jumbo.conf regarding MTU, ubuntu_password, VLAN
-- copy your bf-firewall-jumbo.conf, console-dpu.sh and deploy-bf-bundle.sh to your worker node with the dpu
-- on worker node, execute ./deploy-bf-bundle.sh bf-firewall-jumbo.conf
-- from another shell on the worker node, monitor image progress with ./console-dpu.sh
+- copy your bf-firewall-jumbo.conf, console-dpu.sh and deploy-bf-bundle.sh to your whe  tag 210 pop> enp193s0f0np0f0v0
+- on wf0orker node, execute ./deploy-bf-bundle.sh bf-firewall-jumbo.conf
+- from another shell on the wf0orker node, monitor image progress with ./console-dpu.sh
 
 ### VLAN handling
 
