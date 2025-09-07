@@ -7,7 +7,7 @@
 | merged eSwitch             ovs-bridge br-lag            |     Linux     |
 |----------------+----------------------------------------+---------------+
 |                |        br-lag                          |               |
-== p0            = bond0            pf0hpf <transparent>  = enp193s0f0np0 |
+== p0            = bond0            pf0hpf <trunk port >  = enp193s0f0np0 |
 |                |                                        |               |
 |    eSwtich0    = en3f0pf0sf0 ---+                       |               |
 |    (merged)    = en3f0pf0sf1    | pf0vf0 <push tag pop> = enp193s0f0v0  |
@@ -21,8 +21,8 @@
 |                         |     TMM     |                 |
 |                         +-------------+                 |
 +---------------------------------------------------------+
+```
          
-
 Network bonding enables combining two or more network interfaces into a single interface. 
 It increases the network throughput, bandwidth and provides redundancy if one of the interfaces fails.
 
@@ -30,8 +30,11 @@ NVIDIA BlueField DPU is configured for network bonding on the ARM side in a mann
 Under this configuration, the host only sees a single PF (enp193s0f0np0). There is a mlnx config knob to
 disable the 2nd PF (enp193s0f0np1), but that would break BNK GA 2.1 FLO validation.
 
-```
+pf0hpf connects with the first physical function (PF) on the host and passes all traffic, tagged and untagged.
 
+Virtual Functions (VF) representors (pf0vf0, pf0vf1, ..) are configured with a VLAN tag (200 in this repo),
+making them act like switch access ports: traffic from the ovs bridge with matching VLAN has the VLAN removed 
+(POP) before passing to the host and traffic from the host to the ovs bridge gets VLAN added (push).
 
 ## Image and configure Nvidia Bluefield-3 DPU's
 
