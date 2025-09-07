@@ -1,21 +1,34 @@
-## Nvidia Bluefield-3 DPU
+## Link Aggregation via Nvidia Bluefield-3 DPU
 
 
 ```
-+-------------------------------------------------------+---------------+
-|                      Bluefield-3                      | Host Compute  |
-| merged eSwitch            ovs-bridge br-lag           |     Linux     |
-|----------------+--------------------------------------+---------------+
-|                |        br-lag                        |               |
-== p0            = bond0          pf0hpf <transparent>  = enp193s0f0np0 |
-|                |                                      |               |
-|    eSwtich0    = en3f0pf0sf0                          |               |
-|                = en3f0pf0sf1    pf0vf0 <push tag pop> = enp193s0f0v0  |
-|    eSwitch1    = en3f0pf0sf2    pf0vf1 <push tag pop> = enp193s0f0v1  |
-|                = en3f0pf1sf0    pf0vf2 <push tag pop> = enp193s0f0v2  |
-== p1            = en3f0pf1sf1    pf0vf3 <push tag pop> = enp193s0f0v3  |
-|                = en3f1pf1sf2                          |               |
-+----------------+--------------------------------------+---------------+
++---------------------------------------------------------+---------------+
+|                       Bluefield-3                       | Host Compute  |
+| merged eSwitch             ovs-bridge br-lag            |     Linux     |
+|----------------+----------------------------------------+---------------+
+|                |        br-lag                          |               |
+== p0            = bond0            pf0hpf <transparent>  = enp193s0f0np0 |
+|                |                                        |               |
+|    eSwtich0    = en3f0pf0sf0 ---+                       |               |
+|                = en3f0pf0sf1    | pf0vf0 <push tag pop> = enp193s0f0v0  |
+|    eSwitch1    = en3f0pf0sf2    | pf0vf1 <push tag pop> = enp193s0f0v1  |
+|                = en3f0pf1sf0 -+ | pf0vf2 <push tag pop> = enp193s0f0v2  |
+== p1            = en3f0pf1sf1  | | pf0vf3 <push tag pop> = enp193s0f0v3  |
+|                = en3f1pf1sf2  | |                       |               |
++----------------+--------------|-|-----------------------+---------------+
+|                      internal | | external              |
+|                         +-----+-+-----+                 |
+|                         |     TMM     |                 |
+|                         +-------------+                 |
++---------------------------------------------------------+
+         
+
+Network bonding enables combining two or more network interfaces into a single interface. 
+It increases the network throughput, bandwidth and provides redundancy if one of the interfaces fails.
+
+NVIDIA BlueField DPU is configured for network bonding on the ARM side in a manner transparent to the host. 
+Under this configuration, the host only sees a single PF (enp193s0f0np0). There is a mlnx config knob to
+disable the 2nd PF (enp193s0f0np1), but that would prevent BNK GA 2.1 validation during deployment.
 
 ```
 
