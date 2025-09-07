@@ -45,7 +45,7 @@ disable the 2nd PF (enp193s0f0np1), but that would prevent BNK GA 2.1 validation
 The bf-firewall-jumbo.conf is static in nature and makes assumptions about MTU, VLAN (external and internal) 
 and need to be adjusted:
 
-- MTU is set to 9100
+- MTU is set to 9000
 - External VLAN 210 has ovs firewall rules applied to protect from external/public
 - Internal VLAN 200 is handled by ovs like access ports -> Host VFs are untagged
 - VF's to the host are configured as access port with VLAN 200, allowing Pods to
