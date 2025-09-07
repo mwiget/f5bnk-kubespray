@@ -7,19 +7,19 @@
 add admin-mac=48:A9:8A:4E:0C:25 auto-mac=no comment=defconf name=bridge
 /interface ethernet
 set [ find default-name=qsfp28-1-1 ] auto-negotiation=no fec-mode=fec91 \
-    l2mtu=9100 mtu=9100
+    l2mtu=9000 mtu=9000
 set [ find default-name=qsfp28-2-1 ] auto-negotiation=no fec-mode=fec91 \
-    l2mtu=9100 mtu=9100 rx-flow-control=auto tx-flow-control=auto
-set [ find default-name=qsfp28-3-1 ] l2mtu=9100 mtu=9100
-set [ find default-name=qsfp28-4-1 ] l2mtu=9100 mtu=9100
+    l2mtu=9000 mtu=9000 rx-flow-control=auto tx-flow-control=auto
+set [ find default-name=qsfp28-3-1 ] l2mtu=9000 mtu=9000
+set [ find default-name=qsfp28-4-1 ] l2mtu=9000 mtu=9000
 /interface vlan
 add interface=bridge mtu=1496 name=external vlan-id=210
 add interface=bridge mtu=1496 name=internal vlan-id=200
 /interface bonding
-add forced-mac-address=00:00:00:00:00:00 lacp-rate=1sec mode=802.3ad mtu=9100 \
+add forced-mac-address=00:00:00:00:00:00 lacp-rate=1sec mode=802.3ad mtu=9000 \
     name=milan1 slaves=qsfp28-3-1,qsfp28-4-1 transmit-hash-policy=\
     layer-3-and-4
-add lacp-rate=1sec mode=802.3ad mtu=9100 name=rome1 slaves=\
+add lacp-rate=1sec mode=802.3ad mtu=9000 name=rome1 slaves=\
     qsfp28-1-1,qsfp28-2-1 transmit-hash-policy=layer-3-and-4
 /interface wireless security-profiles
 set [ find default=yes ] supplicant-identity=MikroTik
