@@ -36,6 +36,13 @@ Virtual Functions (VF) representors (pf0vf0, pf0vf1, ..) are configured with a V
 making them act like switch access ports: traffic from the ovs bridge with matching VLAN has the VLAN removed 
 (POP) before passing to the host and traffic from the host to the ovs bridge gets VLAN added (push).
 
+## Requirements
+
+- Nvidia Bluefield-3 bf-bundle-2.9.2 bfb image. Use [./download-bf-bundle.sh](./download-bf-bundle.sh) to download
+the image from Nvidia or use their official download side.
+- Create bf.conf DPU configuration for each Bluefield-3 DPU. Use one of the example templates as starting point: 
+
+
 ## Image and configure Nvidia Bluefield-3 DPU's
 
 - copy and adjust bf-firewall-jumbo.conf regarding MTU, ubuntu_password, VLAN
@@ -55,6 +62,11 @@ and need to be adjusted:
 attach via multus to VFs and be connected to internal VLAN 200 without specifying on the host.
 - PF interface however passes all VLANs like a trunk port, allowing other VLANs be switched thru,
 like storage. 
+
+### Caveats
+
+- DPU reboot will require re-applying netplan on the host, because the Virtual Functions (VF) disappear during the
+process
 
 
 ### Check DPU bond0, MTU and ovs-vsctl status
