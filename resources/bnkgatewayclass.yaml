@@ -53,7 +53,7 @@ spec:
     cneController:
       env:
       - name: "TMM_DEFAULT_MTU"
-        value: "9100"
+        value: "9000"
     pseudoCNI:
       env:
       - name: "EXCLUDE_CIDR"
@@ -63,7 +63,7 @@ spec:
       - name: "TMM_CALICO_ROUTER"
         value: "default"
       - name: "TMM_DEFAULT_MTU"
-        value: "9100"
+        value: "9000"
       #      - name: "TMM_LOG_LEVEL"
       #        value: "Debug" 
  
