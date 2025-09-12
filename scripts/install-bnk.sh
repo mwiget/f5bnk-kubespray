@@ -69,23 +69,12 @@ pushd ~/cwc && \
   cwc_api
 popd
 
-echo ""
-echo "install CSI driver for NFS ..."
-helm repo add csi-driver-nfs https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
-helm upgrade --install csi-driver-nfs csi-driver-nfs/csi-driver-nfs --namespace kube-system --set kubeletDir=/var/lib/kubelet
-
 echo "waiting for pods be ready in kube-system namespace ..."
 sleep 2
 until kubectl wait --for=condition=Ready pods --all -n kube-system; do
   echo "retrying in 5 secs ..."
   sleep 5
 done
-
-kubectl get pods --selector app.kubernetes.io/name=csi-driver-nfs --namespace kube-system
-kubectl apply -f resources/storageclass.yaml
-#kubectl patch storageclass nfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-sleep 2
-kubectl get storageclass
 
 echo ""
 echo "Install F5 Lifecycle Opertaor (FLO) ..."
@@ -98,17 +87,6 @@ else
 fi
 
 helm upgrade --install flo oci://repo.f5.com/charts/f5-lifecycle-operator --version v1.198.4-0.1.36 -f /tmp/flo-value.yaml --namespace f5-operators
-
-# no longer required with 2.1.0
-#echo ""
-#echo "Install F5 common, service proxy, Gateway API ..."
-#helm upgrade --install f5-spk-crds-common oci://repo.f5.com/charts/f5-spk-crds-common --version 8.7.4 -f resources/crd-values.yaml
-#helm upgrade --install f5-spk-crds-service-proxy oci://repo.f5.com/charts/f5-spk-crds-service-proxy --version 8.7.4 -f resources/crd-values.yaml
-#kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/experimental-install.yaml
-
-echo ""
-echo "List installed CRDs ..."
-kubectl get crd
 
 echo ""
 echo "Deployment completed in $SECONDS secs."

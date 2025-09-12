@@ -9,7 +9,7 @@ metadata:
   name: iperf3
   namespace: iperf3
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: iperf3

@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 all: cluster extras bnk
 
-cluster: k8s-cluster kubeconfig single-node-fix-coredns sriov
+cluster: k8s-cluster kubeconfig sriov local-path-provisioner # nfs
 
 extras: cert-manager grafana nvidia-gpu-operator
 
@@ -21,8 +21,11 @@ k8s-cluster:
 kubeconfig:
 	./scripts/get-kubeconfig.sh
 
-single-node-fix-coredns:
-	./scripts/coredns-single-node.sh
+nfs:
+	./scripts/install-nfs-storage.sh
+
+local-path-provisioner:
+	./scripts/install-local-path-provisioner.sh
 
 sriov:
 	kubectl apply -f resources/multus.yaml
