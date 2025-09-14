@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 all: cluster extras bnk
 
-cluster: k8s-cluster kubeconfig sriov local-path-provisioner # nfs
+cluster: k8s-cluster kubeconfig sriov local-path-provisioner
 
 extras: cert-manager grafana nvidia-gpu-operator
 
